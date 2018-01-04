@@ -1,0 +1,13 @@
+# Pracownia 3 - SO
+
+###Raport 03.01.2018
+
+Dotychczasowa realizacja wymaga³a doœæ du¿o czytania, przede wszystkim ¿eby ostatecznie zdecydowaæ siê na (chyba najprostszy) sposób zasymulowania wielow¹tkowoœci, poprzez oddzielenie ka¿dej instrukcji wywo³aniem "schedulera", zamiast próby prze³¹czania w¹tków co regularny odstêp czasu.
+
+
+Co jeszcze trzeba zrobiæ:
+
+- byæ mo¿e dodaæ funkcjê join_thread(thread *t);
+- dopisaæ pozosta³e funkcje zawarte w dokumentacji
+- przetestowaæ na pocz¹tku dla bardzo prostych programów wielow¹tkowych
+- znaleŸæ przyk³ad, dla którego mo¿e zdarzyæ siê deadlock, a potem wymyœliæ i zaimplementowaæ rozwi¹zanie takiej sytuacji
