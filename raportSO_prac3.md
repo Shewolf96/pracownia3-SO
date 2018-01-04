@@ -2,7 +2,7 @@
 
 ### Raport 03.01.2018
 
-Dotychczasowa realizacja wymagała dość dużo czytania, przede wszystkim tego, żeby ostatecznie zdecydować się na (chyba najprostszy) sposób zasymulowania wielowątkowości, poprzez oddzielenie każdej instrukcji wywołaniem "schedulera", zamiast próby przełączania wątków co regularny odstęp czasu.
+Dotychczasowa realizacja wymagała dość dużo czytania, przede wszystkim po to, żeby ostatecznie zdecydować się na (chyba najprostszy) sposób zasymulowania wielowątkowości, poprzez oddzielenie każdej instrukcji wywołaniem "schedulera", zamiast próby przełączania wątków co regularny odstęp czasu.
 
 
 Co jeszcze trzeba zrobić:
