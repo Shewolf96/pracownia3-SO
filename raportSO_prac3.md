@@ -1,6 +1,6 @@
 # Pracownia 3 - SO
 
-###Raport 03.01.2018
+### Raport 03.01.2018
 
 Dotychczasowa realizacja wymagała dość dużo czytania, przede wszystkim żeby ostatecznie zdecydować się na (chyba najprostszy) sposób zasymulowania wielowątkowości, poprzez oddzielenie każdej instrukcji wywołaniem "schedulera", zamiast próby przełączania wątków co regularny odstęp czasu.
 
