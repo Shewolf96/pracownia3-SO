@@ -3,8 +3,7 @@
 #include <ucontext.h>
 
 #define MEM 64000
-
-const int MAX_SEM_Q = 10;
+#define MAX_SEM_Q 10
 
 
 typedef struct thread thread;
@@ -13,6 +12,7 @@ struct thread
 {
     ucontext_t context;
     char state;
+    int id;
     thread *next;
 
 };
@@ -26,7 +26,7 @@ typedef struct {
 typedef struct {
     thread *first;
     thread *last;
-    //thread *q [MAX_SEM_Q];
+    thread *q [MAX_SEM_Q];
 
 } sem_queue;
 
@@ -40,14 +40,14 @@ typedef struct
 
 
 
-int counter = 0, exec_cycle = 4;
+int counter = 0, exec_cycle = 4, id = 0;
 th_queue thread_queue;
 ucontext_t Main, c;
 
 void f1();
 void f2();
 void scheduler();
-thread thread_create(void func(void *), void *arg);
+thread thread_create(void (*func), void *arg);
 void thread_preempt();
 void thread_yield();
 void thread_exit();
@@ -55,15 +55,23 @@ void thread_destroy(thread *t);
 void sem_wait(semaphore *s);
 void sem_signal(semaphore *s);
 
+int next_id()
+{
+	return id++;
+}
+
+
 
 int main(int argc, char** argv)
 {
-	//getcontext(&Main);
+	getcontext(&Main);
 	
-	printf("cokolwiek\n");
 	thread t1, t2;
 	t1 = thread_create((void*)&f1, NULL);
 	t2 = thread_create((void*)&f2, NULL);
+
+	setcontext(&(t1.context));	
+//	switchcontext(&Main, &(t1.context));
 	scheduler();
 
 
@@ -84,7 +92,7 @@ void scheduler()
 }
 
 
-thread thread_create(void func(void *), void *arg)
+thread thread_create(void (*func), void *arg)
 {
     thread t;
     getcontext(&c);
@@ -92,25 +100,32 @@ thread thread_create(void func(void *), void *arg)
     c.uc_stack.ss_sp=malloc(MEM);
     c.uc_stack.ss_size=MEM;
     c.uc_stack.ss_flags=0;
-    makecontext(&c, (void*)&func, arg);
+    makecontext(&c, func, 0);
 
     t.context = c;
     t.state = 'r'; 
+    t.id = next_id();
 
     //...umieszczamy w kolejce...
     if(thread_queue.last == NULL)
     {
         thread_queue.last = &t;
         t.next = &t;
+	printf("a tu: %c, %d???\n", thread_queue.last-> next-> state, thread_queue.last-> next-> id);
     }
 
     else
     {
+	printf("a tu: %c, %d???\n", thread_queue.last-> next-> state, thread_queue.last-> next-> id);
         t.next = thread_queue.last-> next;
         thread_queue.last-> next = &t;
         thread_queue.last = &t;
+	
+	printf("a tu: %c, %d???\n", thread_queue.last->state, thread_queue.last->id);
+	printf("a tu: %c, %d???\n", thread_queue.last-> next-> state, thread_queue.last-> next-> id);
     }
 
+    printf("bezsensu....\n");
     return t;
 }
 
@@ -124,11 +139,13 @@ void thread_yield()
 
 void thread_preempt()
 {
+	printf("thread preemption\n");
 	thread* cur_t = thread_queue.last;
 	thread* temp_t = cur_t -> next;
 	
 	while(temp_t-> state != 'r')
 	{
+
 		if((temp_t-> state == 'd') || (temp_t-> state == 'j'))
 		{
 			cur_t-> next = temp_t-> next;
